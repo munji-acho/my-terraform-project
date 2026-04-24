@@ -1,0 +1,5 @@
+region_n_virginia = "us-east-2"
+instance_type     = "t3.micro"
+ami_id            = "ami-0676cc00b8c2e880e"
+ec2_name          = "prod-ec2-production-updated"
+profile           = "hillary"
