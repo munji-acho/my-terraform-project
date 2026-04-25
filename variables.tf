@@ -1,7 +1,7 @@
 variable "region_n_virginia" {}
 variable "instance_type" {}
 variable "ami_id" {}
-variable  "profile" {}
+#variable  "profile" {}
 variable "my_tags" {
     type= map(string)
     default = {
