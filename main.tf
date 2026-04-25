@@ -1,4 +1,4 @@
-resource "aws_instance" "myec2" {
+/*resource "aws_instance" "myec2" {
     for_each = {
         Instance-1    = "t2.micro"
         Instance-2 = "t3.micro"
@@ -13,6 +13,10 @@ resource "aws_instance" "myec2" {
     }
 }
 
+resource "aws_iam_user" "team" {
+  for_each = toset(["Hilary", "Made", "Cynthia", "Celestine","Arvind"])
+  name     = each.value
+}
 
 
 
@@ -49,4 +53,4 @@ module "vpc" {
   name = "my-vpc-celestine"
   cidr = "10.0.0.0/16"
   azs  = ["us-east-1a", "us-east-1b"]
-}
+}*/
