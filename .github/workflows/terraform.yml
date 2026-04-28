@@ -1,4 +1,4 @@
-name:  My First Terraform Deployment
+name: Terraform Deployment
 
 on:
   push:
@@ -7,16 +7,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Terraform Plan & Apply
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
-
+    outputs:
+      plan_status: ${{ job.status }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
 
       - name: Setup AWS & Terraform
         uses: aws-actions/configure-aws-credentials@v4
@@ -25,11 +24,38 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var-file="dev.tfvars" -out=tfplan
+        run: terraform plan -var-file="dev.tfvars"
+
+  apply:
+    name: Terraform Apply
+    needs: plan                      # This makes 'apply' wait for 'plan' to finish
+    runs-on: ubuntu-latest
+    environment: production          # <--- THIS triggers the approval button
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup AWS & Terraform
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
 
       - name: Terraform Apply 
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve -var-file="dev.tfvars"
