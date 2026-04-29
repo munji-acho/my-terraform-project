@@ -5,7 +5,15 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+     inputs:
+      environment:
+        description: 'Select the environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
 jobs:
   plan:
     name: Terraform Plan
@@ -28,17 +36,17 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: cd ${{ inputs.environment }} && terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var-file="dev.tfvars"
+        run: cd ${{ inputs.environment }} && terraform plan -var-file="${{ inputs.environment }}.tfvars"
 
   apply:
     name: Terraform Apply
     needs: plan                      # This makes 'apply' wait for 'plan' to finish
     runs-on: ubuntu-latest
     environment: production          # <--- THIS triggers the approval button
-    #if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -55,7 +63,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        run: cd ${{ inputs.environment }} && terraform init
 
       - name: Terraform Apply 
-        run: terraform apply -auto-approve -var-file="dev.tfvars"
+        run: cd ${{ inputs.environment }} && terraform apply -auto-approve -var-file="${{ inputs.environment }}.tfvars"
