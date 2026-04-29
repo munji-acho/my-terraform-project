@@ -1,4 +1,4 @@
-resource "aws_instance" "myec2" {
+/*resource "aws_instance" "myec2" {
     for_each = {
         Instance-1    = "t2.micro"
         Instance-2 = "t3.micro"
@@ -11,7 +11,7 @@ resource "aws_instance" "myec2" {
         Name = each.key
         environment = 
     }
-}
+}*/
 
 /*resource "aws_iam_user" "team" {
   for_each = toset(["Hilary", "Made", "Cynthia", "Celestine","Arvind"])
