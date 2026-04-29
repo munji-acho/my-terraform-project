@@ -36,10 +36,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: cd ${{ inputs.environment }} && terraform init
+        run: cd ${{ github.event.inputs.environment }} && terraform init
 
       - name: Terraform Plan
-        run: cd ${{ inputs.environment }} && terraform plan -var-file="${{ inputs.environment }}.tfvars"
+        run: cd ${{ github.event.inputs.environment }} && terraform plan -var-file="${{ github.event.inputs.environment }}.tfvars"
 
   apply:
     name: Terraform Apply
@@ -63,7 +63,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: cd ${{ inputs.environment }} && terraform init
+        run: cd ${{ github.event.inputs.environment }} && terraform init
 
       - name: Terraform Apply 
-        run: cd ${{ inputs.environment }} && terraform apply -auto-approve -var-file="${{ inputs.environment }}.tfvars"
+        run: cd ${{ github.event.inputs.environment }} && terraform apply -auto-approve -var-file="${{ github.event.inputs.environment }}.tfvars"
