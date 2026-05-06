@@ -3,9 +3,9 @@ variable "instance_type" {}
 variable "ami_id" {}
 #variable  "profile" {}
 variable "my_tags" {
-    type= map(string)
-    default = {
-        Name = "any-value"
-        env_name = "any-value-env"
-    }
+  type = map(string)
+  default = {
+    Name     = "any-value"
+    env_name = "any-value-env"
+  }
 }
